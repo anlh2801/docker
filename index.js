@@ -41,7 +41,7 @@ function auth(logInfo){
   }
 }
 
-app.use(auth("I am loging. Haha"))
+app.use(auth("I am loging. Test hub"))
 
 let router = require('./demo_api/UserApi')
 app.use('/router', router)
