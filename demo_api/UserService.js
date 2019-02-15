@@ -1,6 +1,8 @@
 let firebase = require('./FirebaseUtil')
 let firestore = firebase.firestore
 
+
+
 function addData (collectionName, data){
     var docRef = firestore.collection(collectionName).doc(data.id + '_' + data.fullName);
     docRef.set(data);
