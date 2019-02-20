@@ -1,25 +1,35 @@
-let firebase = require('./FirebaseUtil')
-let firestore = firebase.firestore
+const repo = require('./UserRepo')
+const multer = require('multer');
+const fs = require('fs');
 
-
-
-function addData (collectionName, data){
-    var docRef = firestore.collection(collectionName).doc(data.id + '_' + data.fullName);
-    docRef.set(data);
-    
+async function getAllUser(req){
+    return await repo.getAllData('users');
 }
 
-function getAllData (collectionName){
-  return firestore.collection(collectionName).get().then((snapshot) => {
-    let result = [];
-    snapshot.forEach((doc) => {
-      result.push(doc.data());
+async function addUser(req) {
+    return await repo.addData('users', req.body);
+}
+
+// Upload file
+function uploadFile(keyFile){
+    let storage = multer.memoryStorage({
+        destination: (req, file, cb) => {
+          cb(null, './uploads')
+        },
+        filename: (req, file, cb) => {
+          cb(null, Date.now() + "-" + file.originalname)
+        }
     });
-    return result;
-  })
-  .catch((err) => {
-    console.log('Error getting documents', err);
-  });
+    
+    multer({storage: storage});
+    let upload = multer({storage: storage});  
+    return upload.single(keyFile);
 }
 
-module.exports = {addData, getAllData}
+async function responeFileData(req, res){
+    let fileUpload = req.file;
+    return fileUpload.buffer;
+}
+
+
+module.exports = {getAllUser, addUser, uploadFile, responeFileData}

@@ -5,7 +5,6 @@ function getToken(){
     return Math.round(new Date().getTime() / (3*60*1000));
   }
 function sendResOK (message, data) {
-    //res.status(200).send(obj)
     return {
         status : 200,
         resDetails : {
@@ -14,6 +13,14 @@ function sendResOK (message, data) {
             data : data
         }
         
+      }
+}
+
+function sendResOKAllType (message, data) {
+    return {
+        status : 200,
+        message: message,
+        resDetails : data        
       }
 }
 
@@ -30,18 +37,31 @@ function auth(req, res, next){
     next();
 }
 
-function wrapRequest(op, needAuth) {
+function wrapRequest(op, needAuth, messageRespone) {
     return async (req, res) => {
         try{
             if(req.headers && !req.headers.user && needAuth){
-                return res.status("401").send("Error")
+                console.log("Unauthorized user");
+                throw new err.Unauthorized("Unauthorized user")
             }
             console.log(`User logged in as ${req.headers.user}`)
-            const result = await op(req)
-            res.status(200).send(result);
+            const result = await op(req)            
+            console.log("Result: " + result);
+            const resOk = sendResOKAllType(messageRespone, result); 
+                    
+            res.status(resOk.status).send(resOk.resDetails);
         }
         catch(ex){
-
+            let error = null
+            const uid = uuid()
+            if(ex instanceof err.HttpError){
+            error = ex
+            }
+            else{
+            error = new err.InternalServerError(`Unexpected Exception, please look at the log id ${uid}`)
+            console.log(`ErrorId: ${uid}, info: ${ex}`)
+            }
+            res.status(error.code).send({message: error.message, stack: error.stack})
         }
     }
 }
@@ -50,5 +70,5 @@ module.exports = {
      auth,
      getToken,
      sendResOK,
-     wrapRequest
+     wrapRequest,
  };
