@@ -31,5 +31,18 @@ async function responeFileData(req, res){
     return fileUpload.buffer;
 }
 
+function readFileData(){
+    return new Promise( (resolve, reject) => {
+        fs.readFile('./uploads/alo em.txt', (err, data) => { 
+            if (err) reject(err); 
+            resolve(data);
+    
+         });
+    } );
+}
 
-module.exports = {getAllUser, addUser, uploadFile, responeFileData}
+async function readFileDataSync(){
+    return new fs.readFileSync('./uploads/alo em.txt');
+}
+
+module.exports = {getAllUser, addUser, uploadFile, responeFileData, readFileData, readFileDataSync}

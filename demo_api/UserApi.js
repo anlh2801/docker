@@ -11,4 +11,8 @@ router.post('/node/add', tools.wrapRequest(service.addUser, true, "Add successfu
 
 router.post('/node/upload', service.uploadFile('data'), tools.wrapRequest(service.responeFileData, false, "Upload successfully"));
 
+router.get('/node/read', tools.wrapRequest(service.readFileData, false, "Read OKI"));
+
+router.get('/node/read_sync', tools.wrapRequest(service.readFileDataSync, false, "Read Sync OKI"));
+
 module.exports = router
