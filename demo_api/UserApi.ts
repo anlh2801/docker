@@ -1,11 +1,11 @@
 import express from "express";
-import {wrapRequest} from "./Tools";
 import {getAllUser} from "./UserService";
 import {addUser} from "./UserService";
 import {responeFileData} from "./UserService";
 import {uploadFile} from "./UserService";
 import {readFileData} from "./UserService";
 import {readFileDataSync} from "./UserService";
+import {wrapRequest} from "./Utils";
 
 const router = express.Router();
 

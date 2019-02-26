@@ -60,7 +60,7 @@ export function wrapRequest(op, needAuth, messageRespone) {
             } else {
             error = new InternalServerError(`Unexpected Exception, please look at the log id ${uid}`);
             console.log(`ErrorId: ${uid}, info: ${ex}`);
-            }            
+            }
             res.status(error.code).send({message: error.message, stack: error.stack});
         }
     };
